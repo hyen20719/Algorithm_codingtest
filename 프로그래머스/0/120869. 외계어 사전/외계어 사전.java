@@ -9,7 +9,8 @@ class Solution {
                 String[] drr = d.split("");
                 Arrays.sort(drr);
                 
-                if(Arrays.toString(drr).equals(Arrays.toString(spell))){
+                // Arrays.toString 대신 Arrays.equals 사용
+                if(Arrays.equals(drr, spell)){ 
                    return answer = 1;
                 }
             }
