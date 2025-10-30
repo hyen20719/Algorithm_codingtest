@@ -25,18 +25,18 @@ class Solution {
         
         // 가장 높은 점수 여러명인 경우 체크
         int maxNum = Math.max(result[0],Math.max(result[1], result[2]));
-        int cnt = 0;
-        int[] max = new int[3];
-        
+
+        // 동점자도 고려하여 list로 저장
+        List<Integer> list = new ArrayList<>();
         for(int i=0; i<result.length; i++){
-            if(maxNum == result[i]){
-                max[cnt] = i+1;
-                cnt++;
+            if(result[i] == maxNum){
+                list.add(i+1);
             }
         }
-        // 사이즈 조정
-        int[] resized = Arrays.copyOf(max, cnt);
-        return resized;
+        
+        return list.stream().mapToInt(Integer::intValue).toArray();
+        
+        
     }
     
 }
