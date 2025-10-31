@@ -2,7 +2,7 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        int[] answer = {};
+        List<Integer> list = new ArrayList<>();
         // 큐에 작업일수 담기
         Queue<Integer> q = new LinkedList<>();
         for(int i=0; i<progresses.length; i++){
@@ -15,8 +15,6 @@ class Solution {
             q.offer(count);  
         }
         
-        // 큐 size로 배열 생성
-        answer = new int[q.size()];
         int count = 0;
         while(!q.isEmpty()){
             int cnt = 1;
@@ -27,9 +25,9 @@ class Solution {
                 q.poll(); // 앞의 날짜보다 뒤의 날짜가 작으면 꺼내서 함께 배포
                 cnt++;
             }
-            answer[count++] = cnt;
+            list.add(cnt);
         }
-       int[] answer2 =  Arrays.copyOf(answer,count);
-        return answer2;
+       
+        return list.stream().mapToInt(Integer::intValue).toArray();
     }
 }
