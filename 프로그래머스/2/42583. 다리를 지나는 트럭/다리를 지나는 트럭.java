@@ -1,42 +1,59 @@
 import java.util.*;
 
 class Solution {
+    
+    class Truck{
+        int weight;
+        int move;
+        
+        public Truck(int weight){
+            this.weight = weight;
+            this.move = 1;
+        }
+        
+        public void moving(){
+            move++;
+        }
+    }
+    
     public int solution(int bridge_length, int weight, int[] truck_weights) {
+        int answer = 0;
+        Queue<Truck> waitQ = new LinkedList<>();
+        Queue<Truck> moveQ = new LinkedList<>();
         
-        Queue<Integer> q = new LinkedList<>();
-        Queue<Integer> truck = new LinkedList<>();
-        // 트럭 큐
-        for(int i=0; i<truck_weights.length; i++){
-            truck.offer(truck_weights[i]);   
-        }
-        // 다리 길이만큼 큐
-        for(int i=0; i<bridge_length; i++){
-            q.offer(0);
+        for(int t : truck_weights){
+            waitQ.offer(new Truck(t));
         }
         
-        int time = 0;
-        int curWeight = 0;
+        int curWeight = 0; // 현재 다리위 무게 
         
-        while(!q.isEmpty()){
-            time++;
-            // System.out.println(time);
-            curWeight -= q.poll();
+        while(!waitQ.isEmpty() || !moveQ.isEmpty()){
+            answer++;
             
-            if(!truck.isEmpty()){ // 대기 중 트럭이 있을때
-                int next = truck.peek();
-                
-                if(curWeight + next <= weight){
-                    q.offer(next);
-                    curWeight += next;
-                    truck.poll(); // 제한 무게보다 적으니 큐에서 제거
-                }else{
-                    q.offer(0);
-                }
+            if(moveQ.isEmpty()){
+                Truck t = waitQ.poll();
+                curWeight += t.weight;
+                moveQ.offer(t);
+                continue;
             }
-           // System.out.println(truck);
-            // System.out.println(q);
+            
+            for(Truck t : moveQ){
+                t.moving();
+            }
+            
+            //System.out.println(t.weight +", "+t.move);
+            
+            if(moveQ.peek().move > bridge_length){ // 다리길이보다 이동거리가 큰 경우 
+                Truck t = moveQ.poll();
+                curWeight -= t.weight;
+            }
+            
+            if(!waitQ.isEmpty() && curWeight + waitQ.peek().weight <= weight){ // 대기큐에있고 다리위총무게가 최대무게보다 작을때
+                Truck t = waitQ.poll();
+                curWeight += t.weight;
+                moveQ.offer(t);
+            }
         }
-        
-        return time;
+        return answer;
     }
 }
