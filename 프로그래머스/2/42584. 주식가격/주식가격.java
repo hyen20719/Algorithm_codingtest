@@ -2,25 +2,26 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] prices) {
-        int size = prices.length;
-        int[] answer = new int[size];
+        int len = prices.length;
+        int[] answer = new int[len];
         Stack<Integer> stack = new Stack<>();
         
-        for(int i=0; i<size; i++){
-            // 가격이 떨어진 시점마다 입력
-            while(!stack.isEmpty() && prices[i] < prices[stack.peek()]){ 
-                int cur = stack.pop();
-                answer[cur] = i - cur;
+        for(int i=0; i<len; i++){
+            // 가격이 떨어진 지점 찾기
+            while(!stack.isEmpty() && prices[stack.peek()] > prices[i]){ 
+                int idx = stack.pop();
+                answer[idx] = i - idx; // 떨어진 지점에 길이 넣기
             }
             stack.push(i);
         }
-       // System.out.println(stack);
         
-        // 스택에 담겨진 인덱스로 몇 초인지 계산
+       // System.out.println(stack); // [0,1,3,4]
+        
         while(!stack.isEmpty()){
             int idx = stack.pop();
-            answer[idx] = size -1 -idx;
+            answer[idx] = len - idx -1; // 가격이 끝날때까지 떨어지지않은 시간
         }
+        
         
         return answer;
     }
