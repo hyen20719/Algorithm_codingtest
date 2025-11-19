@@ -7,17 +7,12 @@ class Solution {
         Arrays.sort(d);
         
         for(int i : d){
-            if(answer < budget){
-                answer +=i;
-                cnt++;
-            }
-            if(answer > budget){
-                answer -=i;
-                cnt--;
-            }
-            if(answer == budget){
+            if(answer + i > budget){ // 예산을 넘는 경우 stop
                 break;
             }
+            answer +=i;
+            cnt++;
+            
         }
         
         return cnt;
