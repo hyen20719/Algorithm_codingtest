@@ -2,52 +2,39 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] id_list, String[] report, int k) {
-        int[] answer = new int[id_list.length];
-        ArrayList<User> users = new ArrayList<>();
-        HashMap<String,Integer> suspendedList = new HashMap<>(); //<이름>
-        HashMap<String,Integer> idIdx = new HashMap<String,Integer>(); // <이름, 해당 이름의 User 클래스 idx>
-        int idx = 0;
-
-        for(String name : id_list) {
-            idIdx.put(name,idx++);
-            users.add(new User(name));
+        int len = id_list.length;
+        int[] answer = new int[len];
+        
+        // 중복 신고 제거
+        Set<String> set = new HashSet<>(Arrays.asList(report));
+        
+        // 신고당한 횟수
+        Map<String, Integer> map = new HashMap<>();
+        // 유저별 index 저장
+        Map<String, Integer> idxMap = new HashMap<>();
+        for(int i=0; i<len; i++) {
+            map.put(id_list[i], 0);
+            idxMap.put(id_list[i], i);
         }
-
-        for(String re : report){
-            String[] str = re.split(" ");
-            //suspendedCount.put(str[0], suspendedCount.getOrDefault(str[0],0)+1);
-            users.get( idIdx.get(str[0])).reportList.add(str[1]);
-            users.get( idIdx.get(str[1])).reportedList.add(str[0]);
+        
+        // 신고당한 사람 횟수 집계
+        for(String s : set){
+            String user = s.split(" ")[1];
+            map.put(user, map.get(user) +1);
         }
-
-        for(User user : users){
-            if(user.reportedList.size() >= k)
-                suspendedList.put(user.name,1);
+        
+       // System.out.println(map);
+        
+        // 각 유저가 받은 메일 수 계산
+        for(String s : set){
+            String reporter = s.split(" ")[0];
+            String target = s.split(" ")[1];
+            
+            if(map.get(target) >= k){
+                answer[idxMap.get(reporter)]++;
+            }
         }
-
-         for(User user : users){
-             for(String nameReport : user.reportList){
-                 if(suspendedList.get(nameReport) != null){
-                     answer[idIdx.get(user.name)]++;
-                 }
-
-             }
-        }
-
-
-
-
+        
         return answer;
-    }
-}
-
-class User{
-    String name;
-    HashSet<String> reportList;
-    HashSet<String> reportedList;
-    public User(String name){
-        this.name = name;
-        reportList = new HashSet<>();
-        reportedList = new HashSet<>();
     }
 }
