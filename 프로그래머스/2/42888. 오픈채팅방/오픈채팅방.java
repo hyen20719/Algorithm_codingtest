@@ -2,37 +2,42 @@ import java.util.*;
 
 class Solution {
     public String[] solution(String[] record) {
-        int len = record.length;
-        String[] answer = new String[len];
-        int idx = 0;
+        String[] answer = {};
+        Map<String, String> map = new HashMap<>(); // id, 닉네임
+        List<String[]> events = new ArrayList<>(); // type, id 
         
-        Map<String, String> map = new HashMap<>();
-        
-        for(int i=0; i<len; i++){
-            String[] srr = record[i].split(" ");
-            String type = srr[0];
-            String id = srr[1];
+        for(int i=0; i<record.length; i++){
+            String[] r = record[i].split(" ");
+            String type = r[0];
+            String id = r[1];
             
             switch(type){
                 case "Enter" : 
-                    map.put(id, srr[2]);
-                    answer[idx++] = id+"님이 들어왔습니다."; break;
+                    map.put(id, r[2]); 
+                    events.add(new String[]{type, id});
+                    break;
                 case "Leave" : 
-                    answer[idx++] = id+"님이 나갔습니다."; break;
-                case "Change" :
-                   map.put(id, srr[2]); break;
+                    events.add(new String[]{type, id}); break;
+                case "Change": 
+                    map.put(id, r[2]); break;
             }
         }
-        
-        String[] irr = Arrays.copyOf(answer,idx);
-       // System.out.println(Arrays.toString(irr));
-        for(int i=0; i<irr.length; i++){
-            String s = irr[i];
+        int len = events.size();
+        answer = new String[len];
+        for(int i=0; i<len; i++){
+            String[] s = events.get(i);
+            String type = s[0];
+            String id = s[1];
+            String name = map.get(id);
             
-            String id = s.substring(0, s.indexOf("님"));
-            irr[i] = s.replace(id, map.get(id));
+            if(type.equals("Enter")){
+                answer[i] = name +"님이 들어왔습니다.";
+            }else{
+                answer[i] = name +"님이 나갔습니다.";
+            }
+            
         }
         
-        return irr;
+        return answer;
     }
 }
