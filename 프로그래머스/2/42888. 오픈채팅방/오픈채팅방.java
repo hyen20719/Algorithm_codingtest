@@ -11,15 +11,12 @@ class Solution {
             String type = r[0];
             String id = r[1];
             
-            switch(type){
-                case "Enter" : 
-                    map.put(id, r[2]); 
-                    events.add(new String[]{type, id});
-                    break;
-                case "Leave" : 
-                    events.add(new String[]{type, id}); break;
-                case "Change": 
-                    map.put(id, r[2]); break;
+            if (type.equals("Enter") || type.equals("Change")) {
+                map.put(id, r[2]); // 최신 닉네임 업데이트
+            }
+
+            if (type.equals("Enter") || type.equals("Leave")) {
+                events.add(new String[]{type, id});
             }
         }
         int len = events.size();
