@@ -2,39 +2,45 @@ import java.util.*;
 
 class Solution {
     public int solution(String dartResult) {
-        int answer = 0;
-        // S : 1제곱,  D : 2제곱, T : 3제곱
-        // * : 점수 2배 , # : *-1
+        int answer = 0; // 현재숫자
         
-        int idx = -1; //점수 인덱스
-        int[] scores = new int[3]; //3번의 점수 저장 배열
-        int num=0; // 현재 숫자
+        Stack<Integer> stack = new Stack<>();
+        
         for(int i=0; i<dartResult.length(); i++){
             char c = dartResult.charAt(i);
             
             if(Character.isDigit(c)){
-                num = num*10 +(c -'0');
-            }else{
+                answer = answer * 10 + (c - '0');
+                
+            }else if(c == 'S' || c == 'D' || c == 'T' ){
                 switch(c){
-                    case 'S' :  idx++; scores[idx] = num; break;
-                    case 'D' :  idx++; scores[idx] = num*num; break;
-                    case 'T' :  idx++; scores[idx] = num*num*num; break;
-                    case '*' :  scores[idx] *=2; 
-                                if(idx > 0){
-                                    scores[idx-1] *=2; // 이전 점수도 두배
-                                }
-                                break;
-                    case '#' :  scores[idx] *= -1; break;
+                    case 'S':answer = (int)Math.pow(answer,1); break;
+                    case 'D':answer = (int)Math.pow(answer,2); break;
+                    case 'T':answer = (int)Math.pow(answer,3); break;
                 }
-                num = 0; // 다음 숫자 연산을 위해 연산 후 숫자 초기화 
+                stack.push(answer); // 계산한 현재값
+                answer = 0; // 다음 점수를 위해
+            }else if(c == '*'){
+                int num = stack.pop(); // S,D,T에서 계산한 점수 가져오기
+                num *= 2; // 현재 점수 2배
+                if(!stack.isEmpty()){ //스택 비어있지않으면 이전 점수도 
+                    int prev = stack.pop() *2;
+                    stack.push(prev);
+                }
+                stack.push(num);
+                // 이전 점수 먼저 push하고 그 다음 점수
+            }else if(c == '#'){
+                int num = stack.pop() * -1;
+                stack.push(num);
             }
         }
         
-        for(int score : scores){
+        // 최종 점수 합 계산
+        answer = 0; 
+        for(int score : stack){
             answer += score;
         }
         
         return answer;
     }
-    
 }
