@@ -2,32 +2,32 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        List<Integer> list = new ArrayList<>();
-        // 큐에 작업일수 담기
-        Queue<Integer> q = new LinkedList<>();
-        for(int i=0; i<progresses.length; i++){
-            int cur = progresses[i];
-            int count = 0;
-            while(cur < 100 ){
-                cur += speeds[i];
-                count++;
-            }
-            q.offer(count);  
-        }
+        int len = progresses.length;
+        int[] answer = new int[len];
         
-        int count = 0;
-        while(!q.isEmpty()){
-            int cnt = 1;
-            int cur = q.poll(); 
-           // System.out.println("현재===" + cur);
-            // 큐 안의 다음 기능들이 현재 기능과 함께 배포될 수 있는지 확인
-            while(!q.isEmpty() && q.peek() <= cur){ 
-                q.poll(); // 앞의 날짜보다 뒤의 날짜가 작으면 꺼내서 함께 배포
+        Queue<Integer> q = new LinkedList<>();
+        for(int i=0; i<len; i++){
+            int cur = progresses[i];
+            int cnt = 0;
+            while(cur < 100){
+                cur += speeds[i];
                 cnt++;
             }
-            list.add(cnt);
+            q.add(cnt); 
         }
-       
+        
+        List<Integer> list = new ArrayList<>();
+        System.out.println(q);
+        while(!q.isEmpty()){
+            int count = 1;
+            int current = q.poll(); // 10
+            while(!q.isEmpty() && current >= q.peek()){ // 10 > 1
+                q.poll(); // 1
+                count++; 
+            }
+            list.add(count);
+        }
+        
         return list.stream().mapToInt(Integer::intValue).toArray();
     }
 }
