@@ -1,24 +1,29 @@
+import java.util.*;
+
 class Solution {
+    int[][] computers;
+    boolean[] v;
     public int solution(int n, int[][] computers) {
-        boolean[] visited = new boolean[n]; // 방문여부 체크
+        this.computers = computers;
+        v = new boolean[n];
+        
         int answer = 0;
         for(int i=0; i<n; i++){
-            if(!visited[i]){
-                dfs(i ,computers, visited);
+            if(!v[i]){
+                dfs(i);   
                 answer++;
             }
         }
         return answer;
     }
     
-    public void dfs(int cur, int[][] computers, boolean[] visited){
-        visited[cur] = true;
+    public void dfs(int cur){
+        v[cur] = true;
         
-        for(int j=0; j<computers.length; j++){
-            if(computers[cur][j] == 1 && !visited[j]){ // 연결되어있는데 방문안한 경우 
-                dfs(j, computers, visited);
+        for(int i=0; i<computers.length; i++){
+            if(computers[cur][i] == 1 && !v[i]){
+                dfs(i);
             }
         }
-        
     }
 }
