@@ -1,48 +1,52 @@
 import java.util.*;
 
 class Solution {
-    String[] words;
-    String target;
-    boolean[] v;
-    int answer = Integer.MAX_VALUE;
-    
     public int solution(String begin, String target, String[] words) {
-        this.words = words;
-        this.target = target;
-        v = new boolean[words.length];
+        int len = words.length;
+        boolean[] v = new boolean[len];
         
         if(!Arrays.asList(words).contains(target)){
             return 0;
         }
         
-        dfs(begin, 0);
+        Queue<Pair> q = new LinkedList<>();
+        q.offer(new Pair(begin,0));
         
-        return answer == Integer.MAX_VALUE ? 0 : answer;
-    }
-    
-    public void dfs(String w, int cnt){
-        
-        if(w.equals(target)){
-            answer = Math.min(answer, cnt);
-            return;
-        }
-        
-        for(int i=0; i<words.length; i++){
-            if(!v[i]){
-                String word = words[i];
+        while(!q.isEmpty()){
+            Pair cur = q.poll();
+            String word = cur.word;
+            int cnt = cur.cnt;
             
-                int count = 0;
-                for(int j=0; j<word.length(); j++){
-                    if(word.charAt(j) != w.charAt(j)){
-                        count++;
-                    }
-                }
-                if(count == 1){
+            if(word.equals(target)){return cnt;}
+            
+            for(int i=0; i<len; i++){
+                if(!v[i] && differentChk(word, words[i])){
                     v[i] = true;
-                    dfs(word, cnt+1);
-                    v[i] = false;
+                    q.offer(new Pair(words[i], cnt+1));
                 }
             }
+        }
+        
+        
+        return 0;
+    }
+    
+    boolean differentChk(String w, String newWord){
+        int count = 0; 
+        for(int i=0; i<w.length(); i++){
+            if(w.charAt(i) != newWord.charAt(i)){
+                count++;
+            }
+        }
+        return count == 1;
+    }
+    
+    class Pair{
+        String word;
+        int cnt;
+        Pair(String w, int c){
+            word=w;
+            cnt=c;
         }
     }
 }
