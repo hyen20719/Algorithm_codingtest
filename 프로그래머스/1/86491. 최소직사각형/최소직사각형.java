@@ -10,12 +10,10 @@ class Solution {
                 size[0] = size[1];
                 size[1] = temp;
             }
-        }
-        
-        for(int[] size : sizes){
             minX = Math.max(minX, size[0]);
             minY = Math.max(minY, size[1]);
         }
+
         return minX*minY;
     }
 }
