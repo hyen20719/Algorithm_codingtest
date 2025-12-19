@@ -1,17 +1,21 @@
 class Solution {
     public int solution(int[][] sizes) {
-        int maxWidth = 0;
-        int maxHeight = 0;
+        int answer = 0;
+        int minX = 0;
+        int minY = 0;
         
         for(int[] size : sizes){
-            // 더 큰 값은 가로에, 작은 값은 세로에
-            int width = Math.max(size[0], size[1]);
-            int height = Math.min(size[0], size[1]);
-            
-            maxWidth = Math.max(maxWidth, width);
-            maxHeight = Math.max(maxHeight, height);
+            if(size[0]<size[1]){
+                int temp = size[0];
+                size[0] = size[1];
+                size[1] = temp;
+            }
         }
         
-        return maxWidth*maxHeight;
+        for(int[] size : sizes){
+            minX = Math.max(minX, size[0]);
+            minY = Math.max(minY, size[1]);
+        }
+        return minX*minY;
     }
 }
