@@ -2,27 +2,27 @@ import java.util.*;
 
 class Solution {
     String numbers;
-    int len;
     boolean[] v;
-    Set<Integer> set = new HashSet<>();
+    int len;
+    int answer = 0;
+    ArrayList<Integer> list = new ArrayList<>(); // 중복 체크를 위해
     
     public int solution(String numbers) {
-        int answer = 0;
         this.numbers = numbers;
         len = numbers.length();
         v = new boolean[len];
         
         dfs("");
         
-        return set.size();
+        return answer;
     }
     
     public void dfs(String cur){
-        
         if(!cur.equals("")){
-            int num = Integer.parseInt(cur);
-            if(isPrime(num)){
-                set.add(num);
+            int n = Integer.parseInt(cur);
+            if(isPrime(n) && !list.contains(n)){
+                list.add(n);
+                answer++;
             }
         }
         
@@ -35,10 +35,10 @@ class Solution {
         }
     }
     
-    boolean isPrime(int n){
-        if( n < 2) return false;
+    public boolean isPrime(int n){
+        if(n < 2) return false;
         for(int i=2; i*i<=n; i++){
-            if(n % i == 0) return false;
+            if(n % i == 0){ return false;}
         }
         return true;
     }
