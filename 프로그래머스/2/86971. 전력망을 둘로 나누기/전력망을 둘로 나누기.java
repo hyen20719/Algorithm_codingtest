@@ -1,58 +1,50 @@
 import java.util.*;
 
 class Solution {
-    static boolean[] v;
-    static ArrayList<Integer>[] graph;
-    static int cnt = 0;
+    int[][] wires;
+    boolean[] v;
+    ArrayList<List<Integer>> list = new ArrayList<>();
+    int answer = Integer.MAX_VALUE;
     
     public int solution(int n, int[][] wires) {
-        int answer = Integer.MAX_VALUE;
-        int len = wires.length;
-        graph = new ArrayList[n+1];
-        v = new boolean[n+1];
+        this.wires = wires;
         
-        for(int i=1; i<=n; i++){
-            graph[i] = new ArrayList<>();
+        for(int i=0; i<=n; i++){
+            list.add(new ArrayList<>());
         }
         
-        // 간선 모두 추가 
-        for(int i=0; i<len; i++){
-            int st = wires[i][0];
-            int end = wires[i][1];
-            
-            graph[st].add(end);
-            graph[end].add(st);
+        for(int[] wire : wires){
+            list.get(wire[0]).add(wire[1]);
+            list.get(wire[1]).add(wire[0]);
         }
         
-        // 하나씩 끊고 dfs 돌리기
-        for(int i=0; i<len; i++){
-            int st = wires[i][0];
-            int end = wires[i][1];
+        for(int i=0; i<wires.length; i++){
+            v = new boolean[n+1];
             
-            // 그냥 st로 remove시 인덱스로 인식
-            graph[st].remove((Integer)end);
-            graph[end].remove((Integer)st);
+            list.get(wires[i][0]).remove(Integer.valueOf(wires[i][1]));
+            list.get(wires[i][1]).remove(Integer.valueOf(wires[i][0]));
             
-            dfs(1);
-            answer = Math.min(answer, Math.abs(cnt - (n-cnt)));
+            int part1 = dfs(wires[i][0]);
+            int part2 = n - part1;
             
-            cnt = 0;
-            Arrays.fill(v, false); // 방문 배열 모두 초기화
-            graph[st].add(end);
-            graph[end].add(st);
+            answer = Math.min(answer, Math.abs(part1-part2));
+            
+            list.get(wires[i][0]).add(wires[i][1]);
+            list.get(wires[i][1]).add(wires[i][0]);
         }
         
         return answer;
     }
     
-    static void dfs(int node){
-        v[node] = true;
-        cnt++;
-        for(int next : graph[node]){
+    public int dfs(int cur){
+        v[cur] = true;
+        int count = 1;
+        
+        for(int next : list.get(cur)){
             if(!v[next]){
-                dfs(next);
+                count += dfs(next);
             }
         }
+        return count;
     }
-    
 }
