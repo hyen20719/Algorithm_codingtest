@@ -1,34 +1,30 @@
 import java.util.*;
 
 class Solution {
-    static int answer;
-    static boolean[] v;
-    static int[][] dungeons;
+    int[][] dungeons;
+    boolean[] v;
+    int answer = 0;
     
     public int solution(int k, int[][] dungeons) {
-        answer = 0;
-        v = new boolean[dungeons.length];
         this.dungeons = dungeons;
+        v = new boolean[dungeons.length];
         
         dfs(k, 0);
+        
         return answer;
     }
     
-    static void dfs(int k, int count){
-        answer = Math.max(count, answer);
+    public void dfs(int cur, int cnt){
+        answer = Math.max(answer, cnt);
+        if(cnt == dungeons.length) return;
         
         for(int i=0; i<dungeons.length; i++){
-            int[] dungeon = dungeons[i];  // 던전
-            int limit = dungeon[0]; // 최소 필요도
-            int damage = dungeon[1]; // 소모 피로도 
-            
-            if(!v[i] && k >= limit){
+            int[] d = dungeons[i];
+            if(!v[i] && cur >= d[0]){
                 v[i] = true;
-                dfs(k-damage, count+1);
+                dfs(cur - d[1], cnt+1);
                 v[i] = false;
             }
-            
         }
-        
     }
 }
