@@ -2,31 +2,31 @@ import java.util.*;
 
 class Solution {
     public String solution(String number, int k) {
-        StringBuilder sb = new StringBuilder();
-        Stack<Character> stack = new Stack<>();
-        int len = number.length();
-        
-        for(int i=0; i<len; i++){
-            char cur = number.charAt(i);
+        String answer = "";
+        Stack<Integer> stack = new Stack<>();
+        for(char c : number.toCharArray()){
+            int num = c - '0';
             
-            while(!stack.isEmpty() && k > 0 && stack.peek() < cur){
+            while(!stack.isEmpty() && stack.peek() < num && k > 0){
                 stack.pop();
                 k--;
             }
-            stack.push(cur);
+            stack.push(num);
         }
-       // System.out.println(stack);
-        //System.out.println(k);
+        
         while(k > 0){
             stack.pop();
             k--;
         }
         
-        //System.out.println(stack);
-        while(!stack.isEmpty()){
-            sb.append(stack.pop());
+        StringBuilder sb = new StringBuilder();
+        for(int s : stack) {
+            sb.append(s);
         }
-       // System.out.println(stack);
-        return sb.reverse().toString();
+        
+      //  System.out.println(stack);
+        
+        
+        return sb.toString();
     }
 }
