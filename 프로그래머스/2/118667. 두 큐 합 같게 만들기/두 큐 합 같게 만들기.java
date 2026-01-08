@@ -11,7 +11,7 @@ class Solution {
             sum1 += queue1[i];
             totalq[i] = queue1[i];
         }
-        //System.out.println(totalq);
+        
         for(int i=len; i<totalq.length; i++){
             totalq[i] = queue2[i-len];
             sum2 += queue2[i-len];
@@ -23,7 +23,7 @@ class Solution {
         int left = 0; //q1시작점
         int right = len; // q2시작점
         int cnt = 0; //이동횟수
-        long target = total/2;
+        long target = total/2; 
         
         while(left < right && right < len*2){
             if(target == sum1){
