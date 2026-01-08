@@ -1,35 +1,32 @@
 import java.util.*;
 
 class Solution {
-    boolean found = false;
+    int cnt = 0;
     int answer = 0;
-    char[] crr = new char[]{'A', 'E', 'I', 'O', 'U'};
     String word;
-    int len;
+    char[] crr = {'A', 'E', 'I', 'O', 'U'};
     
     public int solution(String word) {
-        len = crr.length;
         this.word = word;
         
-        dfs("", 0);   
-        
+        dfs("");
         return answer;
     }
     
-    public void dfs(String cur, int depth){
+    public void dfs(String cur){
+        if(cur.length() > 5) {
+            return;
+        }
+        if(!cur.equals("")) cnt++;
         
         if(cur.equals(word)){
-            found = true;
-            return;    
-        } 
-        if(depth == 5) return;
+            answer = cnt;  // word 발견 → answer 저장
+            return;
+        }
         
-        for(int i=0; i<5; i++){
-            //System.out.println(cur);
-            answer++;  
-            dfs(cur+crr[i], depth+1);
-            if(found) return;
-             
+        for(char c : crr){
+            dfs(cur+c);   
+            if(answer != 0) return;
         }
     }
 }
