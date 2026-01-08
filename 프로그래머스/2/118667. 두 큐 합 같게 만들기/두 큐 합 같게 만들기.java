@@ -1,44 +1,42 @@
+import java.util.*;
+
 class Solution {
     public int solution(int[] queue1, int[] queue2) {
+        int answer = -2;
+        int len = queue1.length;
         long sum1 = 0, sum2 = 0;
-        int n = queue1.length;
-
-        // 각 큐 합 계산
-        for(int i=0; i<n; i++){
+        
+        int[] totalq = new int[len*2];
+        for(int i=0; i<len; i++){
             sum1 += queue1[i];
-            sum2 += queue2[i];
+            totalq[i] = queue1[i];
         }
-
-        long totalSum = sum1 + sum2;
-        // 합이 홀수면 절대 동일하게 나눌 수 없음
-        if(totalSum % 2 != 0) return -1;
-
-        long target = totalSum / 2;
-
-        // 두 큐를 이어서 하나의 배열처럼 사용
-        int[] q = new int[2*n];
-        System.arraycopy(queue1, 0, q, 0, n);
-        System.arraycopy(queue2, 0, q, n, n);
-
-        int i = 0;      // queue1 front
-        int j = n;      // queue2 front
-        int cnt = 0;    // 작업 횟수
-        int maxMoves = 4 * n; // 안전하게 최대 이동 횟수
-
-        while(cnt <= maxMoves){
-            if(sum1 == target) return cnt;
-
-            if(sum1 > target){
-                sum1 -= q[i % (2*n)]; // queue1에서 pop
-                i++;
-            } else {
-                sum1 += q[j % (2*n)]; // queue2에서 pop해서 queue1에 insert
-                j++;
+        //System.out.println(totalq);
+        for(int i=len; i<totalq.length; i++){
+            totalq[i] = queue2[i-len];
+            sum2 += queue2[i-len];
+        }
+        
+        long total = sum1+sum2;
+        if(total % 2 != 0) return -1;
+        
+        int left = 0; //q1시작점
+        int right = len; // q2시작점
+        int cnt = 0; //이동횟수
+        long target = total/2;
+        
+        while(left < right && right < len*2){
+            if(target == sum1){
+                return cnt; // 큐 합이 같을 때
+            }else if(sum1 > target){
+                sum1-=totalq[left++];
+            }else{
+                sum1+=totalq[right % (2 * len)]; // ✅ 수정
+                right++;
             }
-
             cnt++;
         }
-
-        return -1; // 목표 달성 불가
+        
+        return -1;
     }
 }
