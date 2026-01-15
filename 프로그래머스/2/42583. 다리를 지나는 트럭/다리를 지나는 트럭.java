@@ -1,59 +1,38 @@
 import java.util.*;
 
 class Solution {
-    
-    class Truck{
-        int weight;
-        int move;
-        
-        public Truck(int weight){
-            this.weight = weight;
-            this.move = 1;
-        }
-        
-        public void moving(){
-            move++;
-        }
-    }
-    
     public int solution(int bridge_length, int weight, int[] truck_weights) {
-        int answer = 0;
-        Queue<Truck> waitQ = new LinkedList<>();
-        Queue<Truck> moveQ = new LinkedList<>();
         
-        for(int t : truck_weights){
-            waitQ.offer(new Truck(t));
+        Queue<Integer> q = new LinkedList<>();
+        Queue<Integer> road = new LinkedList<>(); // 다리위
+        
+        for(int truck : truck_weights){
+            q.offer(truck);
         }
         
-        int curWeight = 0; // 현재 다리위 무게 
-        
-        while(!waitQ.isEmpty() || !moveQ.isEmpty()){
-            answer++;
-            
-            if(moveQ.isEmpty()){
-                Truck t = waitQ.poll();
-                curWeight += t.weight;
-                moveQ.offer(t);
-                continue;
-            }
-            
-            for(Truck t : moveQ){
-                t.moving();
-            }
-            
-            //System.out.println(t.weight +", "+t.move);
-            
-            if(moveQ.peek().move > bridge_length){ // 다리길이보다 이동거리가 큰 경우 
-                Truck t = moveQ.poll();
-                curWeight -= t.weight;
-            }
-            
-            if(!waitQ.isEmpty() && curWeight + waitQ.peek().weight <= weight){ // 대기큐에있고 다리위총무게가 최대무게보다 작을때
-                Truck t = waitQ.poll();
-                curWeight += t.weight;
-                moveQ.offer(t);
-            }
+        for(int i=0; i<bridge_length; i++){
+            road.offer(0);
         }
-        return answer;
+        
+        int time = 0;
+        int totalWeight = 0;
+        while(!q.isEmpty()){
+            time++;
+            
+            // 다리에서 하나 내림
+            totalWeight -= road.poll();
+
+            // 트럭 올릴 수 있으면 올림(한도내에서)
+            if(totalWeight + q.peek() <= weight){
+                int truck = q.poll();
+                road.offer(truck);
+                totalWeight += truck;
+            }else{
+                road.offer(0);
+            }
+            
+        }
+        
+        return time + bridge_length;
     }
 }
