@@ -5,24 +5,31 @@ class Solution {
         int answer = 0;
         
         Stack<Integer> stack = new Stack<>();
-        for(int move : moves){ // 열 기준이 됨
-            int col = move-1;
-            for(int row=0; row<board.length; row++){
-                int cur = board[row][col];
-                if(cur != 0){
-                    board[row][col] = 0; // 인형 뽑음 
-                    
-                    if(!stack.isEmpty() && cur == stack.peek()){
+        int cnt = 0;
+        for(int i=0; i<moves.length; i++){
+            int j=moves[i]-1; 
+            int idx= 0;
+            
+            while(idx < board.length){
+                if(board[idx][j] !=0){
+                    // System.out.println(idx);
+                    if(!stack.isEmpty() && stack.peek() == board[idx][j]){
                         stack.pop();
-                        answer +=2; // 제거된 인형 수
+                        board[idx][j] = 0;
+                        cnt+=2;
                     }else{
-                        stack.push(cur);
+                        stack.push(board[idx][j]);   
+                        board[idx][j] = 0;
+                        
                     }
-                    break; // move당 한번만 뽑기 위해서
+                    break;
                 }
+                    idx++;
+                
             }
         }
+         // System.out.println(stack);
         
-        return answer;
+        return cnt;
     }
 }
