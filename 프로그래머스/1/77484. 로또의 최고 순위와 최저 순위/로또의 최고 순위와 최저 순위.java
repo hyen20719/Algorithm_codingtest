@@ -2,10 +2,6 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] lottos, int[] win_nums) {
-        int[] answer = new int[2];
-        
-        Arrays.sort(lottos);
-        Arrays.sort(win_nums);
         
         HashSet<Integer> set = new HashSet<>();
         for(int n : win_nums){
@@ -32,9 +28,7 @@ class Solution {
         // System.out.println(zeroCnt);
         int best = lank-zeroCnt <1 ? 1 :lank-zeroCnt;
         if(lank == 0 && zeroCnt == 0) best = 6;
-        answer[0] =best;
-        answer[1] = worst;
         
-        return answer;
+        return new int[]{best,worst};
     }
 }
